@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Gym Controller Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #051424;
+            color: #d4e4fa;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(30, 30, 30, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+        .metric-glow {
+            box-shadow: 0 0 20px rgba(75, 226, 119, 0.1);
+        }
+        @media (max-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#b4c5ff",
+                        "tertiary": "#ffb5ab",
+                        "surface-dim": "#051424",
+                        "inverse-on-surface": "#233143",
+                        "surface-container-highest": "#273647",
+                        "primary-container": "#22c55e",
+                        "on-surface": "#d4e4fa",
+                        "surface-container-lowest": "#010f1f",
+                        "inverse-primary": "#006e2f",
+                        "outline": "#869585",
+                        "inverse-surface": "#d4e4fa",
+                        "tertiary-fixed": "#ffdad5",
+                        "on-tertiary-fixed-variant": "#7f2a21",
+                        "error": "#ffb4ab",
+                        "surface-tint": "#4ae176",
+                        "on-surface-variant": "#bccbb9",
+                        "tertiary-fixed-dim": "#ffb4a9",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "surface-container-low": "#0d1c2d",
+                        "primary": "#4be277",
+                        "background": "#051424",
+                        "on-secondary-fixed": "#00174b",
+                        "secondary-fixed": "#dbe1ff",
+                        "on-primary-container": "#004b1e",
+                        "on-error": "#690005",
+                        "on-background": "#d4e4fa",
+                        "surface": "#051424",
+                        "surface-bright": "#2c3a4c",
+                        "on-error-container": "#ffdad6",
+                        "error-container": "#93000a",
+                        "on-primary-fixed": "#002109",
+                        "primary-fixed-dim": "#4ae176",
+                        "outline-variant": "#3d4a3d",
+                        "on-tertiary-container": "#76231b",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "on-tertiary-fixed": "#410001",
+                        "surface-container": "#122131",
+                        "primary-fixed": "#6bff8f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "unit": "4px",
+                        "container-padding": "24px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-24 lg:pb-0">
+<!-- TopAppBar -->
+<header class="bg-background dark:bg-background border-b border-white/10 w-full sticky top-0 z-50 flex items-center justify-between px-container-padding h-20 w-full">
+    <div class="flex items-center gap-4">
+        <span class="material-symbols-outlined text-primary cursor-pointer lg:hidden" data-icon="menu">menu</span>
+        <h1 class="font-display text-display text-primary uppercase tracking-tighter text-2xl lg:text-3xl">Gym Controller</h1>
+    </div>
+    <div class="flex items-center gap-stack-md">
+        <div class="hidden md:block text-right">
+            <p class="font-label-md text-label-md text-on-surface">Welcome Admin</p>
+            <p class="text-[10px] text-on-surface-variant uppercase tracking-widest">Lead Administrator</p>
+        </div>
+        <div class="w-10 h-10 rounded-full border border-primary/20 p-0.5 overflow-hidden active:scale-95 duration-100 transition-transform cursor-pointer">
+            <img class="w-full h-full object-cover rounded-full" data-alt="Close up professional portrait of a fitness center administrator with a focused, friendly expression, set against a blurred modern gym interior with high-end equipment. The lighting is crisp and cinematic with subtle green highlights reflecting the brand's primary color, maintaining a premium SaaS software aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcynjCJ4VqEae7iaVzEtFrCShWJvpT1hI221MKfFnHnubWyOB82iZ9w6jcfuJXTDrvSjDefYBZNeiGuTnRTSxfJgTXbpYvwZE3PXqwhyW-cHpR75GsgTWd5m_d4J4N6Fa13EuRGgL9W5GG-B3G1qcawWWeC5M2BeDDun9UbbCsn7Hh-R2GgvigqXSbv1-0AUSzKrOmebf55KuX5tHueO9nm7rSKKl_Su8aV2bQU-uo9DAGnE3QRALQ"/>
+        </div>
+    </div>
+</header>
+<div class="flex">
+    <!-- NavigationDrawer (Desktop Only) -->
+    <aside class="hidden lg:flex flex-col gap-stack-sm p-stack-md bg-surface-container dark:bg-surface-container border-r border-white/10 fixed left-0 top-0 h-full w-[280px] z-40">
+        <div class="mb-stack-lg mt-20 flex items-center gap-3 px-4">
+            <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <span class="material-symbols-outlined text-on-primary text-xl" data-icon="fitness_center">fitness_center</span>
+            </div>
+            <div>
+                <h2 class="font-headline-lg text-headline-lg text-primary font-bold text-lg">Apex Fitness</h2>
+                <p class="text-on-surface-variant text-xs">Gym Management System</p>
+            </div>
+        </div>
+        <nav class="flex-1 flex flex-col gap-1">
+            <a class="bg-primary text-on-primary font-bold rounded-lg px-4 py-3 flex items-center gap-3 active:translate-x-1 duration-200" href="#">
+                <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                <span class="font-label-md text-label-md">Dashboard</span>
+            </a>
+            <a class="text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all px-4 py-3 flex items-center gap-3 rounded-lg group" href="#">
+                <span class="material-symbols-outlined group-hover:text-primary" data-icon="group">group</span>
+                <span class="font-label-md text-label-md">Members</span>
+            </a>
+            <a class="text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all px-4 py-3 flex items-center gap-3 rounded-lg group" href="#">
+                <span class="material-symbols-outlined group-hover:text-primary" data-icon="person_add">person_add</span>
+                <span class="font-label-md text-label-md">Registration</span>
+            </a>
+            <a class="text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all px-4 py-3 flex items-center gap-3 rounded-lg group" href="#">
+                <span class="material-symbols-outlined group-hover:text-primary" data-icon="payments">payments</span>
+                <span class="font-label-md text-label-md">Plans</span>
+            </a>
+            <a class="text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all px-4 py-3 flex items-center gap-3 rounded-lg group" href="#">
+                <span class="material-symbols-outlined group-hover:text-primary" data-icon="receipt_long">receipt_long</span>
+                <span class="font-label-md text-label-md">Payments</span>
+            </a>
+            <a class="text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all px-4 py-3 flex items-center gap-3 rounded-lg group" href="#">
+                <span class="material-symbols-outlined group-hover:text-primary" data-icon="qr_code_scanner">qr_code_scanner</span>
+                <span class="font-label-md text-label-md">Attendance</span>
+            </a>
+            <a class="text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all px-4 py-3 flex items-center gap-3 rounded-lg group" href="#">
+                <span class="material-symbols-outlined group-hover:text-primary" data-icon="fitness_center">fitness_center</span>
+                <span class="font-label-md text-label-md">Trainers</span>
+            </a>
+            <div class="my-4 border-t border-white/5"></div>
+            <a class="text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all px-4 py-3 flex items-center gap-3 rounded-lg group" href="#">
+                <span class="material-symbols-outlined group-hover:text-primary" data-icon="analytics">analytics</span>
+                <span class="font-label-md text-label-md">Reports</span>
+            </a>
+            <a class="text-on-surface-variant hover:text-on-surface hover:bg-white/5 transition-all px-4 py-3 flex items-center gap-3 rounded-lg group" href="#">
+                <span class="material-symbols-outlined group-hover:text-primary" data-icon="settings">settings</span>
+                <span class="font-label-md text-label-md">Settings</span>
+            </a>
+        </nav>
+    </aside>
+    <!-- Main Content -->
+    <main class="flex-1 lg:ml-[280px] p-container-padding max-w-[1400px]">
+        <!-- Quick Actions -->
+        <section class="mb-stack-lg flex flex-wrap gap-stack-md">
+            <button class="bg-primary text-black font-semibold px-6 py-3 rounded-lg flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20">
+                <span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+                Add Member
+            </button>
+            <button class="bg-white/5 border border-white/10 text-white font-semibold px-6 py-3 rounded-lg flex items-center gap-2 hover:bg-white/10 active:scale-95 transition-all">
+                <span class="material-symbols-outlined" data-icon="qr_code_2">qr_code_2</span>
+                Check-in QR
+            </button>
+        </section>
+        <!-- Metrics Bento Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-stack-lg">
+            <div class="glass-card p-6 rounded-xl metric-glow group hover:border-primary/30 transition-all cursor-default">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-2 bg-primary/10 rounded-lg text-primary">
+                        <span class="material-symbols-outlined" data-icon="group">group</span>
+                    </div>
+                    <span class="text-xs text-primary font-bold">+2.4% ↑</span>
+                </div>
+                <p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Total Members</p>
+                <h3 class="font-headline-lg text-headline-lg text-white">1,240</h3>
+            </div>
+            <div class="glass-card p-6 rounded-xl group hover:border-primary/30 transition-all cursor-default">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-2 bg-secondary/10 rounded-lg text-secondary">
+                        <span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+                    </div>
+                    <span class="text-xs text-secondary font-bold">79% rate</span>
+                </div>
+                <p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Active Members</p>
+                <h3 class="font-headline-lg text-headline-lg text-white">980</h3>
+            </div>
+            <div class="glass-card p-6 rounded-xl group hover:border-error/30 transition-all cursor-default">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-2 bg-error/10 rounded-lg text-error">
+                        <span class="material-symbols-outlined" data-icon="timer">timer</span>
+                    </div>
+                    <span class="text-xs text-error font-bold">Urgent</span>
+                </div>
+                <p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Expiring Soon</p>
+                <h3 class="font-headline-lg text-headline-lg text-white">15</h3>
+            </div>
+            <div class="glass-card p-6 rounded-xl group hover:border-primary/30 transition-all cursor-default">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-2 bg-primary/10 rounded-lg text-primary">
+                        <span class="material-symbols-outlined" data-icon="payments">payments</span>
+                    </div>
+                    <span class="text-xs text-primary font-bold">+12% ↑</span>
+                </div>
+                <p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Total Revenue</p>
+                <h3 class="font-headline-lg text-headline-lg text-white">$12,500</h3>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Charts Section -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="glass-card p-6 rounded-xl">
+                    <div class="flex justify-between items-center mb-6">
+                        <h4 class="font-headline-md text-headline-md text-on-surface">Revenue Growth</h4>
+                        <select class="bg-white/5 border border-white/10 rounded-md text-xs px-3 py-1 outline-none">
+                            <option>Last 6 Months</option>
+                            <option>Last Year</option>
+                        </select>
+                    </div>
+                    <div class="h-64 flex items-end justify-between gap-2">
+                        <!-- Monthly bars/lines visual mock -->
+                        <div class="flex-1 bg-white/5 hover:bg-primary/20 transition-colors h-[40%] rounded-t-sm relative group">
+                            <span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] hidden group-hover:block">$8k</span>
+                        </div>
+                        <div class="flex-1 bg-white/5 hover:bg-primary/20 transition-colors h-[60%] rounded-t-sm relative group"></div>
+                        <div class="flex-1 bg-white/5 hover:bg-primary/20 transition-colors h-[55%] rounded-t-sm relative group"></div>
+                        <div class="flex-1 bg-white/5 hover:bg-primary/20 transition-colors h-[80%] rounded-t-sm relative group"></div>
+                        <div class="flex-1 bg-white/5 hover:bg-primary/20 transition-colors h-[75%] rounded-t-sm relative group"></div>
+                        <div class="flex-1 bg-primary h-[95%] rounded-t-sm relative group">
+                            <span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] text-primary font-bold">$12.5k</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between mt-4 text-[10px] text-on-surface-variant uppercase tracking-tighter">
+                        <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-xl">
+                    <div class="flex justify-between items-center mb-6">
+                        <h4 class="font-headline-md text-headline-md text-on-surface">Attendance Trends</h4>
+                        <div class="flex gap-4">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                                <span class="text-[10px] text-on-surface-variant">This Week</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-2 h-2 rounded-full bg-white/20"></div>
+                                <span class="text-[10px] text-on-surface-variant">Last Week</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-48 relative overflow-hidden">
+                        <!-- SVG Curve visual mock -->
+                        <svg class="w-full h-full preserve-3d" viewbox="0 0 400 100">
+                            <path d="M0,80 Q50,40 100,60 T200,30 T300,50 T400,20" fill="none" stroke="rgba(75, 226, 119, 0.6)" stroke-width="3"></path>
+                            <path d="M0,90 Q50,70 100,85 T200,65 T300,75 T400,55" fill="none" stroke="rgba(255, 255, 255, 0.1)" stroke-width="2"></path>
+                        </svg>
+                    </div>
+                    <div class="flex justify-between mt-2 text-[10px] text-on-surface-variant uppercase tracking-tighter">
+                        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Recent Activity & Side Column -->
+            <div class="space-y-6">
+                <div class="glass-card rounded-xl overflow-hidden">
+                    <div class="p-6 border-b border-white/5">
+                        <h4 class="font-label-md text-label-md text-on-surface uppercase tracking-widest font-bold">Recent Activity</h4>
+                    </div>
+                    <div class="divide-y divide-white/5">
+                        <div class="p-4 hover:bg-white/5 transition-colors flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                <span class="material-symbols-outlined text-sm" data-icon="person">person</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-body-sm text-body-sm text-white">John Doe checked in</p>
+                                <p class="text-[10px] text-on-surface-variant">Main Entrance • 2m ago</p>
+                            </div>
+                        </div>
+                        <div class="p-4 hover:bg-white/5 transition-colors flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary shrink-0">
+                                <span class="material-symbols-outlined text-sm" data-icon="autorenew">autorenew</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-body-sm text-body-sm text-white">Sarah Smith renewed plan</p>
+                                <p class="text-[10px] text-on-surface-variant">Elite Yearly Plan • 45m ago</p>
+                            </div>
+                        </div>
+                        <div class="p-4 hover:bg-white/5 transition-colors flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-full bg-tertiary/10 flex items-center justify-center text-tertiary shrink-0">
+                                <span class="material-symbols-outlined text-sm" data-icon="error">error</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-body-sm text-body-sm text-white">Access Denied: Mike Ross</p>
+                                <p class="text-[10px] text-on-surface-variant">Expired Membership • 1h ago</p>
+                            </div>
+                        </div>
+                        <div class="p-4 hover:bg-white/5 transition-colors flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                <span class="material-symbols-outlined text-sm" data-icon="person">person</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-body-sm text-body-sm text-white">New Registration: Emily Chen</p>
+                                <p class="text-[10px] text-on-surface-variant">Mobile App • 2h ago</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-full p-3 text-center text-xs text-primary font-bold hover:bg-primary/5 transition-colors uppercase tracking-widest">View All Activity</button>
+                </div>
+                <!-- Training Promo/Alert -->
+                <div class="relative rounded-xl overflow-hidden h-40 group cursor-pointer">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="Dynamic shot of a person deadlifting in a high-tech gym with neon green ambient lighting, heavy contrast shadows, and industrial-chic architectural elements. The image quality is sharp and captures a moment of intense high-performance athletic activity, perfectly matching the premium Apex Fitness brand identity." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBgDtHZs2l294pOu-V0ouRSXyqTLG1tH1dDe3LfW13S36nLlruFej-M3b5i2TChn4egegZGBK4TKAXetD784kbTDrGgwS8JGVDRtuNoMJom2UCKHJ4idY8vQOSBY9Z61PQvhluwJ1mXYpep2YFTUtPRS77fm9Nj5widgzkGO27iW_ls4BH1hKwELW7uDQrkfdfmOoWsdw4FveN1Y6jjZmMTJIMMsGhU6vayeNpn5G9Tjtb2_je6HU5_')"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent flex flex-col justify-end p-6">
+                        <span class="bg-primary text-black text-[10px] font-bold px-2 py-0.5 rounded w-max mb-2">HOT CLASS</span>
+                        <h5 class="text-white font-bold">HIIT Session - 6PM</h5>
+                        <p class="text-white/70 text-xs">Only 2 slots remaining</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-4 bg-surface-container-low/95 backdrop-blur-md border-t border-white/10 rounded-t-xl shadow-[0_-4px_24px_rgba(0,0,0,0.4)]">
+    <a class="flex flex-col items-center justify-center text-primary font-bold active:scale-90 transition-transform" href="#">
+        <span class="material-symbols-outlined" data-icon="home">home</span>
+        <span class="font-label-sm text-label-sm">Home</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform" href="#">
+        <span class="material-symbols-outlined" data-icon="group">group</span>
+        <span class="font-label-sm text-label-sm">Members</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform" href="#">
+        <span class="material-symbols-outlined" data-icon="qr_code_2">qr_code_2</span>
+        <span class="font-label-sm text-label-sm">Check-in</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform" href="#">
+        <span class="material-symbols-outlined" data-icon="payments">payments</span>
+        <span class="font-label-sm text-label-sm">Revenue</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform" href="#">
+        <span class="material-symbols-outlined" data-icon="settings">settings</span>
+        <span class="font-label-sm text-label-sm">Settings</span>
+    </a>
+</nav>
+<script>
+    // Micro-interactions for activity items
+    document.querySelectorAll('.divide-y > div').forEach(item => {
+        item.addEventListener('mouseenter', () => {
+            item.style.transform = 'translateX(4px)';
+            item.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+        });
+        item.addEventListener('mouseleave', () => {
+            item.style.transform = 'translateX(0)';
+            item.style.backgroundColor = 'transparent';
+        });
+    });
+
+    // Simple tab/pill interaction simulation
+    const filterSelects = document.querySelectorAll('select');
+    filterSelects.forEach(select => {
+        select.addEventListener('change', (e) => {
+            console.log('Filtering data for:', e.target.value);
+            // In a real app, this would trigger data fetching
+        });
+    });
+</script>
+</body></html>

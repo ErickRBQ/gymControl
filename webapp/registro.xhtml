@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Gym Controller - Member Registration</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #051424;
+            color: #d4e4fa;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #051424;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #273647;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3d4a3d;
+        }
+        .form-input-focus:focus {
+            border-color: #4be277;
+            box-shadow: 0 0 0 2px rgba(75, 226, 119, 0.2);
+            outline: none;
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#b4c5ff",
+                        "tertiary": "#ffb5ab",
+                        "surface-dim": "#051424",
+                        "inverse-on-surface": "#233143",
+                        "surface-container-highest": "#273647",
+                        "primary-container": "#22c55e",
+                        "on-surface": "#d4e4fa",
+                        "surface-container-lowest": "#010f1f",
+                        "inverse-primary": "#006e2f",
+                        "outline": "#869585",
+                        "inverse-surface": "#d4e4fa",
+                        "tertiary-fixed": "#ffdad5",
+                        "on-tertiary-fixed-variant": "#7f2a21",
+                        "error": "#ffb4ab",
+                        "surface-tint": "#4ae176",
+                        "on-surface-variant": "#bccbb9",
+                        "tertiary-fixed-dim": "#ffb4a9",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "surface-container-low": "#0d1c2d",
+                        "primary": "#4be277",
+                        "background": "#051424",
+                        "on-secondary-fixed": "#00174b",
+                        "secondary-fixed": "#dbe1ff",
+                        "on-primary-container": "#004b1e",
+                        "on-error": "#690005",
+                        "on-background": "#d4e4fa",
+                        "surface": "#051424",
+                        "surface-bright": "#2c3a4c",
+                        "on-error-container": "#ffdad6",
+                        "error-container": "#93000a",
+                        "on-primary-fixed": "#002109",
+                        "primary-fixed-dim": "#4ae176",
+                        "outline-variant": "#3d4a3d",
+                        "on-tertiary-container": "#76231b",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "on-tertiary-fixed": "#410001",
+                        "surface-variant": "#273647",
+                        "on-tertiary": "#60130d",
+                        "secondary-container": "#0053db",
+                        "surface-container-high": "#1c2b3c",
+                        "on-primary-fixed-variant": "#005321",
+                        "on-secondary-container": "#cdd7ff",
+                        "on-secondary": "#002a78",
+                        "on-primary": "#003915",
+                        "tertiary-container": "#ff8b7c",
+                        "surface-container": "#122131",
+                        "primary-fixed": "#6bff8f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "stack-lg": "32px",
+                        "unit": "4px",
+                        "container-padding": "24px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="flex min-h-screen overflow-x-hidden">
+<!-- Navigation Drawer (Desktop) -->
+<aside class="hidden lg:flex flex-col gap-stack-sm p-stack-md bg-surface-container border-r border-white/10 fixed left-0 top-0 h-full w-[280px] z-40">
+    <div class="mb-stack-lg px-4">
+        <h1 class="font-headline-lg text-headline-lg text-primary font-bold">Apex Fitness</h1>
+        <p class="text-on-surface-variant text-label-sm uppercase tracking-widest mt-1">Gym Controller</p>
+    </div>
+    <nav class="flex flex-col gap-1">
+        <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 flex items-center gap-3 transition-all" href="#">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="font-label-md">Dashboard</span>
+        </a>
+        <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 flex items-center gap-3 transition-all" href="#">
+            <span class="material-symbols-outlined">group</span>
+            <span class="font-label-md">Members</span>
+        </a>
+        <a class="bg-primary text-on-primary font-bold rounded-lg px-4 py-3 flex items-center gap-3 transition-all" href="#">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person_add</span>
+            <span class="font-label-md">Registration</span>
+        </a>
+        <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 flex items-center gap-3 transition-all" href="#">
+            <span class="material-symbols-outlined">payments</span>
+            <span class="font-label-md">Plans</span>
+        </a>
+        <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 flex items-center gap-3 transition-all" href="#">
+            <span class="material-symbols-outlined">receipt_long</span>
+            <span class="font-label-md">Payments</span>
+        </a>
+        <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 flex items-center gap-3 transition-all" href="#">
+            <span class="material-symbols-outlined">qr_code_scanner</span>
+            <span class="font-label-md">Attendance</span>
+        </a>
+        <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 flex items-center gap-3 transition-all" href="#">
+            <span class="material-symbols-outlined">fitness_center</span>
+            <span class="font-label-md">Trainers</span>
+        </a>
+        <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 flex items-center gap-3 transition-all" href="#">
+            <span class="material-symbols-outlined">analytics</span>
+            <span class="font-label-md">Reports</span>
+        </a>
+        <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 flex items-center gap-3 transition-all" href="#">
+            <span class="material-symbols-outlined">settings</span>
+            <span class="font-label-md">Settings</span>
+        </a>
+    </nav>
+    <div class="mt-auto p-4 bg-white/5 rounded-xl flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold border border-primary/30">
+            JD
+        </div>
+        <div class="overflow-hidden">
+            <p class="text-label-md text-on-surface font-bold truncate">Admin Profile</p>
+            <p class="text-label-sm text-on-surface-variant truncate">Lead Administrator</p>
+        </div>
+    </div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 lg:ml-[280px] min-h-screen flex flex-col relative pb-20 lg:pb-0">
+    <!-- Top App Bar -->
+    <header class="bg-background w-full sticky top-0 z-50 border-b border-white/10 flex items-center justify-between px-container-padding h-20">
+        <div class="flex items-center gap-4">
+            <button class="lg:hidden p-2 text-on-surface-variant">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <h2 class="font-headline-md text-headline-md text-on-surface">Member Registration</h2>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="hidden md:flex flex-col items-end">
+                <span class="text-label-sm text-primary">Status: System Online</span>
+                <span class="text-label-sm text-on-surface-variant">March 14, 2024</span>
+            </div>
+            <div class="w-10 h-10 rounded-full bg-surface-container-highest border border-white/10 flex items-center justify-center overflow-hidden">
+                <img class="w-full h-full object-cover" data-alt="A professional headshot of a gym administrator wearing modern athletic gear, captured in a brightly lit fitness studio with high-end equipment blurred in the background. The style is clean, corporate, and performance-oriented with soft cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChxi84OfUni7C_jOW-YRo_wmT_atkeIJxaMeT2flu3_oBQixC20XCqS_7lbhi1nKUOQkjgWGnF-76TsWufphdfUI_beyYYEXd8e9e7aeGtMH_rxPc-lDmFx9SuIByXj-hl5nnA7sJ8PXwDPBS81DF0vYkU3FDpX4-jQK9kDiX36xhdWTn3MJy2cyhDIob_4TsEo-8BDB8H1UQFwmXE36ShYO4oDOy2rD39PAycJv_4MTeAI9wJdIyO"/>
+            </div>
+        </div>
+    </header>
+    <!-- Registration Form Container -->
+    <div class="flex-1 p-container-padding max-w-5xl mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-stack-lg">
+            <!-- Left Column: Identity & Photo -->
+            <div class="md:col-span-4 space-y-stack-lg">
+                <section class="bg-surface-container border border-white/10 rounded-xl p-stack-md flex flex-col items-center text-center">
+                    <h3 class="text-label-sm text-on-surface-variant uppercase tracking-widest mb-stack-md w-full text-left">Member Photo</h3>
+                    <div class="relative group cursor-pointer w-48 h-48 rounded-2xl bg-white/5 border-2 border-dashed border-white/10 flex flex-col items-center justify-center transition-all hover:border-primary/50 hover:bg-primary/5 overflow-hidden">
+                        <span class="material-symbols-outlined text-4xl text-on-surface-variant group-hover:text-primary transition-colors">add_a_photo</span>
+                        <p class="text-label-sm text-on-surface-variant mt-2 px-4">Click to upload or drag image</p>
+                        <!-- Hidden upload placeholder image -->
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity">
+                            <img class="w-full h-full object-cover" data-alt="A minimalist grey and white architectural pattern with clean lines and high-energy geometric shapes, representing a modern fitness atmosphere. Dark mode aesthetic with green accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRdfSp1kEPCo-Jh72jeoPU8knjR9jQnkFoPctYVcMhTpcJlvSBmJmqsFBWOQmzVPloptHGizudl9fzH8cSQO4z9DA_IZkpMe708gI6Bhh6DF5ReaVoOLbb2A6Ic6mA7F5-9rw9WjkHehkOox_i-Rw06u2SxwFnfKupi9fZCE-VJ68oihhD7EbLFOeoF2yVb_SU1hcIBywhGAwqwstodbzN8e_VWIJOmt6mQSktaDq0XRkvQPIA4tJN"/>
+                        </div>
+                    </div>
+                    <p class="text-label-sm text-on-surface-variant mt-4 italic">Format: JPG, PNG (Max 5MB)</p>
+                </section>
+                <section class="bg-surface-container border border-white/10 rounded-xl p-stack-md">
+                    <h3 class="text-label-sm text-on-surface-variant uppercase tracking-widest mb-stack-md">System Info</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between border-b border-white/5 pb-2">
+                            <span class="text-label-md text-on-surface-variant">Internal ID</span>
+                            <span class="text-label-md text-on-surface font-mono">REG-2024-0892</span>
+                        </div>
+                        <div class="flex justify-between border-b border-white/5 pb-2">
+                            <span class="text-label-md text-on-surface-variant">Date Added</span>
+                            <span class="text-label-md text-on-surface">Auto-generated</span>
+                        </div>
+                        <div class="flex justify-between border-b border-white/5 pb-2">
+                            <span class="text-label-md text-on-surface-variant">Staff Assigned</span>
+                            <span class="text-label-md text-on-surface">Admin Profile</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- Right Column: Form Fields -->
+            <div class="md:col-span-8 space-y-stack-lg">
+                <form class="space-y-stack-lg">
+                    <!-- Personal Information -->
+                    <div class="bg-surface-container border border-white/10 rounded-xl p-stack-md">
+                        <div class="flex items-center gap-2 mb-stack-lg border-b border-white/5 pb-4">
+                            <span class="material-symbols-outlined text-primary">person</span>
+                            <h3 class="font-headline-md text-body-lg text-on-surface">Personal Information</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+                            <div class="col-span-2">
+                                <label class="block text-body-sm text-on-surface-variant mb-1">Full Name</label>
+                                <input class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="e.g. Alexander Mitchell" type="text"/>
+                            </div>
+                            <div>
+                                <label class="block text-body-sm text-on-surface-variant mb-1">ID Number / SSN</label>
+                                <input class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="000-00-0000" type="text"/>
+                            </div>
+                            <div>
+                                <label class="block text-body-sm text-on-surface-variant mb-1">Gender</label>
+                                <select class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none appearance-none">
+                                    <option disabled="" selected="" value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="non-binary">Non-binary</option>
+                                    <option value="prefer-not-to-say">Prefer not to say</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-body-sm text-on-surface-variant mb-1">Date of Birth</label>
+                                <input class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none" type="date"/>
+                            </div>
+                            <div>
+                                <label class="block text-body-sm text-on-surface-variant mb-1">Phone Number</label>
+                                <input class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="+1 (555) 000-0000" type="tel"/>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Emergency Contact -->
+                    <div class="bg-surface-container border border-white/10 rounded-xl p-stack-md">
+                        <div class="flex items-center gap-2 mb-stack-lg border-b border-white/5 pb-4">
+                            <span class="material-symbols-outlined text-tertiary">emergency</span>
+                            <h3 class="font-headline-md text-body-lg text-on-surface">Emergency Contact</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+                            <div class="col-span-2">
+                                <label class="block text-body-sm text-on-surface-variant mb-1">Contact Full Name</label>
+                                <input class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="Guardian or relative name" type="text"/>
+                            </div>
+                            <div class="col-span-2">
+                                <label class="block text-body-sm text-on-surface-variant mb-1">Emergency Phone</label>
+                                <input class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="+1 (555) 000-0000" type="tel"/>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Plan Selection -->
+                    <div class="bg-surface-container border border-white/10 rounded-xl p-stack-md">
+                        <div class="flex items-center gap-2 mb-stack-lg border-b border-white/5 pb-4">
+                            <span class="material-symbols-outlined text-secondary">workspace_premium</span>
+                            <h3 class="font-headline-md text-body-lg text-on-surface">Membership Plan Selection</h3>
+                        </div>
+                        <div class="space-y-stack-md">
+                            <label class="block text-body-sm text-on-surface-variant mb-1">Choose a Membership Plan</label>
+                            <div class="grid grid-cols-1 gap-3">
+                                <!-- Plan Selection Dropdown -->
+                                <select class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-4 text-on-surface font-bold text-body-lg focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none appearance-none">
+                                    <option disabled="" selected="" value="">Select an active plan...</option>
+                                    <option value="basic">Basic Membership - $29.99/mo</option>
+                                    <option value="pro">Pro Athlete Tier - $59.99/mo</option>
+                                    <option value="elite">Elite Performance - $129.99/mo</option>
+                                    <option value="annual">Annual Commitment - $300.00/yr</option>
+                                </select>
+                            </div>
+                            <div class="p-4 bg-primary/5 border border-primary/10 rounded-lg flex items-start gap-3">
+                                <span class="material-symbols-outlined text-primary text-xl">info</span>
+                                <p class="text-body-sm text-on-surface-variant">Selection will trigger first billing cycle immediately upon save. Contract details will be sent to the member's registered email.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Form Actions -->
+                    <div class="flex items-center justify-end gap-stack-md pt-stack-lg">
+                        <button class="px-8 py-3 bg-white/5 border border-white/10 text-on-surface font-semibold rounded-lg hover:bg-white/10 transition-all active:scale-95 duration-100" type="button">
+                            Cancel
+                        </button>
+                        <button class="px-10 py-3 bg-primary text-black font-bold rounded-lg hover:shadow-[0_0_20px_rgba(75,226,119,0.3)] transition-all active:scale-95 duration-100 flex items-center gap-2" type="submit">
+                            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">save</span>
+                            Save Member
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-4 bg-surface-container-low/95 backdrop-blur-md border-t border-white/10 shadow-[0_-4px_24px_rgba(0,0,0,0.4)]">
+    <a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-white/10 active:scale-90 transition-transform" href="#">
+        <span class="material-symbols-outlined text-2xl">home</span>
+        <span class="font-label-sm">Home</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-white/10 active:scale-90 transition-transform" href="#">
+        <span class="material-symbols-outlined text-2xl">group</span>
+        <span class="font-label-sm">Members</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-primary font-bold active:bg-white/10 active:scale-90 transition-transform" href="#">
+        <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">qr_code_2</span>
+        <span class="font-label-sm">Check-in</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-white/10 active:scale-90 transition-transform" href="#">
+        <span class="material-symbols-outlined text-2xl">payments</span>
+        <span class="font-label-sm">Revenue</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-white/10 active:scale-90 transition-transform" href="#">
+        <span class="material-symbols-outlined text-2xl">settings</span>
+        <span class="font-label-sm">Settings</span>
+    </a>
+</nav>
+<script>
+    // Simple form interaction prevention for demo
+    document.querySelector('form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `&lt;span class="material-symbols-outlined animate-spin">sync&lt;/span> Saving...`;
+        btn.disabled = true;
+
+        setTimeout(() => {
+            alert('Member registered successfully!');
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }, 1500);
+    });
+
+    // Background visual flair - subtle animated particles via JS (lightweight)
+    const canvas = document.createElement('canvas');
+    canvas.className = 'fixed inset-0 pointer-events-none opacity-20 z-0';
+    document.body.prepend(canvas);
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
+
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+        constructor() {
+            this.reset();
+        }
+        reset() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.size = Math.random() * 1.5 + 0.5;
+            this.speedX = (Math.random() - 0.5) * 0.5;
+            this.speedY = (Math.random() - 0.5) * 0.5;
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            if (this.x &lt; 0 || this.x > width || this.y &lt; 0 || this.y > height) this.reset();
+        }
+        draw() {
+            ctx.fillStyle = '#4be277';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i &lt; 50; i++) particles.push(new Particle());
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+        requestAnimationFrame(animate);
+    }
+    animate();
+</script>
+</body></html>
