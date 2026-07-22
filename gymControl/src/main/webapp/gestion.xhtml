@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Member Management - Gym Controller</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #051424;
+            color: #d4e4fa;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(30, 30, 30, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="overflow-hidden bg-background">
+<!-- Tailwind Config Injection -->
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "secondary": "#b4c5ff",
+                    "tertiary": "#ffb5ab",
+                    "surface-dim": "#051424",
+                    "inverse-on-surface": "#233143",
+                    "surface-container-highest": "#273647",
+                    "primary-container": "#22c55e",
+                    "on-surface": "#d4e4fa",
+                    "surface-container-lowest": "#010f1f",
+                    "inverse-primary": "#006e2f",
+                    "outline": "#869585",
+                    "inverse-surface": "#d4e4fa",
+                    "tertiary-fixed": "#ffdad5",
+                    "on-tertiary-fixed-variant": "#7f2a21",
+                    "error": "#ffb4ab",
+                    "surface-tint": "#4ae176",
+                    "on-surface-variant": "#bccbb9",
+                    "tertiary-fixed-dim": "#ffb4a9",
+                    "on-secondary-fixed-variant": "#003ea8",
+                    "surface-container-low": "#0d1c2d",
+                    "primary": "#4be277",
+                    "background": "#051424",
+                    "on-secondary-fixed": "#00174b",
+                    "secondary-fixed": "#dbe1ff",
+                    "on-primary-container": "#004b1e",
+                    "on-error": "#690005",
+                    "on-background": "#d4e4fa",
+                    "surface": "#051424",
+                    "surface-bright": "#2c3a4c",
+                    "on-error-container": "#ffdad6",
+                    "error-container": "#93000a",
+                    "on-primary-fixed": "#002109",
+                    "primary-fixed-dim": "#4ae176",
+                    "outline-variant": "#3d4a3d",
+                    "on-tertiary-container": "#76231b",
+                    "secondary-fixed-dim": "#b4c5ff",
+                    "on-tertiary-fixed": "#410001",
+                    "surface-variant": "#273647",
+                    "on-tertiary": "#60130d",
+                    "secondary-container": "#0053db",
+                    "surface-container-high": "#1c2b3c",
+                    "on-primary-fixed-variant": "#005321",
+                    "on-secondary-container": "#cdd7ff",
+                    "on-secondary": "#002a78",
+                    "on-primary": "#003915",
+                    "tertiary-container": "#ff8b7c",
+                    "surface-container": "#122131",
+                    "primary-fixed": "#6bff8f"
+                },
+                "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+                "spacing": {
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "stack-lg": "32px",
+                    "unit": "4px",
+                    "container-padding": "24px",
+                    "gutter": "16px"
+                },
+                "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "display": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-sm": ["Inter"]
+                },
+                "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}]
+                }
+            },
+        },
+    }
+</script>
+<!-- Navigation Shell -->
+<div class="flex h-screen w-full">
+    <!-- Navigation Drawer (Desktop) -->
+    <aside class="hidden lg:flex flex-col gap-stack-sm p-stack-md fixed left-0 top-0 h-full w-[280px] bg-surface-container dark:bg-surface-container border-r border-white/10 z-40">
+        <div class="flex flex-col gap-2 mb-8 px-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-on-primary font-bold">fitness_center</span>
+                </div>
+                <div>
+                    <h1 class="font-headline-lg text-headline-lg text-primary font-bold leading-tight">Apex Fitness</h1>
+                    <p class="text-label-sm text-on-surface-variant uppercase tracking-widest">Lead Administrator</p>
+                </div>
+            </div>
+        </div>
+        <nav class="flex flex-col gap-1">
+            <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all duration-200 active:translate-x-1 flex items-center gap-3 font-label-md text-label-md" href="#">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <a class="bg-primary text-on-primary font-bold rounded-lg px-4 py-3 transition-all duration-200 active:translate-x-1 flex items-center gap-3 font-label-md text-label-md" href="#">
+                <span class="material-symbols-outlined">group</span>
+                <span>Members</span>
+            </a>
+            <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all duration-200 active:translate-x-1 flex items-center gap-3 font-label-md text-label-md" href="#">
+                <span class="material-symbols-outlined">person_add</span>
+                <span>Registration</span>
+            </a>
+            <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all duration-200 active:translate-x-1 flex items-center gap-3 font-label-md text-label-md" href="#">
+                <span class="material-symbols-outlined">payments</span>
+                <span>Plans</span>
+            </a>
+            <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all duration-200 active:translate-x-1 flex items-center gap-3 font-label-md text-label-md" href="#">
+                <span class="material-symbols-outlined">receipt_long</span>
+                <span>Payments</span>
+            </a>
+            <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all duration-200 active:translate-x-1 flex items-center gap-3 font-label-md text-label-md" href="#">
+                <span class="material-symbols-outlined">qr_code_scanner</span>
+                <span>Attendance</span>
+            </a>
+            <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all duration-200 active:translate-x-1 flex items-center gap-3 font-label-md text-label-md" href="#">
+                <span class="material-symbols-outlined">fitness_center</span>
+                <span>Trainers</span>
+            </a>
+            <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all duration-200 active:translate-x-1 flex items-center gap-3 font-label-md text-label-md" href="#">
+                <span class="material-symbols-outlined">analytics</span>
+                <span>Reports</span>
+            </a>
+            <a class="text-on-surface-variant hover:text-on-surface px-4 py-3 hover:bg-white/5 transition-all duration-200 active:translate-x-1 flex items-center gap-3 font-label-md text-label-md" href="#">
+                <span class="material-symbols-outlined">settings</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </aside>
+    <!-- Main Content Area -->
+    <main class="flex-1 lg:ml-[280px] flex flex-col h-full bg-background relative">
+        <!-- Top App Bar -->
+        <header class="w-full sticky top-0 z-50 bg-background dark:bg-background border-b border-white/10 flex items-center justify-between px-container-padding h-20">
+            <div class="flex items-center gap-4">
+                <button class="lg:hidden p-2 hover:bg-white/5 rounded-full transition-colors active:scale-95 duration-100">
+                    <span class="material-symbols-outlined text-on-surface">menu</span>
+                </button>
+                <h2 class="font-headline-md text-headline-md text-primary lg:block hidden">Member Management</h2>
+                <h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary lg:hidden">Gym Controller</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="p-2 hover:bg-white/5 rounded-full transition-colors active:scale-95 duration-100 relative">
+                    <span class="material-symbols-outlined text-on-surface">notifications</span>
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
+                </button>
+                <div class="flex items-center gap-3 ml-2 group cursor-pointer">
+                    <div class="text-right hidden sm:block">
+                        <p class="font-label-md text-label-md text-on-surface">Admin Profile</p>
+                        <p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">System Superuser</p>
+                    </div>
+                    <img class="w-10 h-10 rounded-full border border-white/10 group-hover:border-primary transition-colors" data-alt="A cinematic, high-resolution portrait of a professional fitness administrator in a sleek modern gym setting. The lighting is moody and sophisticated with cool blue and vibrant green neon accents reflecting off glass surfaces. The administrator has a focused, professional expression, wearing minimalist tech-wear. The background shows blurred high-end gym equipment and ambient dark-mode UI elements." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyvXNgQ3fdriY-jVwKiPgfuveeh0bBeoKYrvqLxOWzFZlmDQYD6656BEfUN0wup_bjHjVtKMMVmSprwMlIHLNYdQPUvxAI0-vKfG6P2fUidrLySsyLsSVN_j7nV2qXgnq5PDYpgua7BpNbJ86xTAVKTZ-rP4oWi9m2FjMhdFTLSzGS4OcYa-zngPZ2TqIcls60pT3tfdxhOB0oqcR9BUPQOt6HIk-ALO6n7l5chx3c9ZmknR3CnEl7"/>
+                </div>
+            </div>
+        </header>
+        <!-- Search and Filters Section -->
+        <div class="p-container-padding space-y-6">
+            <!-- Search Bar -->
+            <div class="relative max-w-2xl">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+                <input class="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-body-md font-body-md focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all outline-none" placeholder="Search members by name, ID, or phone..." type="text"/>
+            </div>
+            <!-- Filter Chips -->
+            <div class="flex items-center gap-stack-sm overflow-x-auto pb-2 custom-scrollbar">
+                <button class="px-5 py-2 rounded-full bg-primary text-black font-bold text-label-md transition-all active:scale-95">All Members</button>
+                <button class="px-5 py-2 rounded-full bg-white/5 border border-white/10 text-on-surface-variant hover:text-on-surface hover:bg-white/10 text-label-md transition-all active:scale-95">Active</button>
+                <button class="px-5 py-2 rounded-full bg-white/5 border border-white/10 text-on-surface-variant hover:text-on-surface hover:bg-white/10 text-label-md transition-all active:scale-95">Suspended</button>
+                <button class="px-5 py-2 rounded-full bg-white/5 border border-white/10 text-on-surface-variant hover:text-on-surface hover:bg-white/10 text-label-md transition-all active:scale-95">Expired</button>
+            </div>
+        </div>
+        <!-- Member List Grid -->
+        <div class="flex-1 overflow-y-auto px-container-padding pb-32 custom-scrollbar">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <ui:repeat value="#{vistaGymBean.miembros}" var="miembro">
+                    <div class="glass-card p-6 rounded-xl hover:border-primary/50 transition-colors group cursor-pointer">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center border border-white/10 text-primary font-bold">#{miembro.nombre.substring(0, 1)}</div>
+                                <div>
+                                    <h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">#{miembro.nombre}</h3>
+                                    <p class="text-label-sm text-on-surface-variant uppercase tracking-tighter">ID: #{miembro.id}</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase border border-primary/20">#{miembro.estado}</span>
+                        </div>
+                        <div class="space-y-2 border-t border-white/5 pt-4">
+                            <div class="flex items-center gap-2 text-on-surface-variant">
+                                <span class="material-symbols-outlined text-[18px]">phone</span>
+                                <span class="text-body-sm font-body-sm">#{miembro.telefono}</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-on-surface-variant">
+                                <span class="material-symbols-outlined text-[18px]">mail</span>
+                                <span class="text-body-sm font-body-sm">#{miembro.email}</span>
+                            </div>
+                        </div>
+                    </div>
+                </ui:repeat>
+                <!-- Member Card 2 (Expired) -->
+                <div class="glass-card p-6 rounded-xl hover:border-error/50 transition-colors group cursor-pointer">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center gap-4">
+                            <img class="w-14 h-14 rounded-xl object-cover border border-white/10" data-alt="Portrait of a young woman in fitness attire, featuring a clean and professional look. The color palette is dominated by deep blacks and cool tones, accented by red highlights. Lighting is crisp and high-contrast, typical of a luxury high-performance brand. The style is minimalist and high-end SaaS corporate, looking perfectly integrated into a dark mode interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkZZn86Yiv3uSUtzuUWreDbo6aIb8ep-okR-BVeev76Qg-mWMkDfd-1ouIhM2BF5oTUFv15bCGI9bsFqG0UQ5WqN-Ksz3RDgaASEbKJPJWvXGGgdtIcKt4OoTsGmLCjIcv6_YcvqyMaOGZHNSIAc_nsDZf63z8EAKATiCg0hqTmonaRmf8Iok7jvWFLuFBx7egQLwApF9gLEC9Y7ur1Fzrg4UdopirzWGkgAdOMWune_RsJXhP9r5x"/>
+                            <div>
+                                <h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-error transition-colors">Elena Rodriguez</h3>
+                                <p class="text-label-sm text-on-surface-variant uppercase tracking-tighter">ID: AF-18721</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-error/10 text-error text-[10px] font-bold uppercase border border-error/20">Expired</span>
+                    </div>
+                    <div class="space-y-2 border-t border-white/5 pt-4">
+                        <div class="flex items-center gap-2 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[18px]">phone</span>
+                            <span class="text-body-sm font-body-sm">+1 (555) 987-6543</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[18px]">mail</span>
+                            <span class="text-body-sm font-body-sm">elena.rod@webmail.com</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Member Card 3 (Suspended) -->
+                <div class="glass-card p-6 rounded-xl hover:border-tertiary/50 transition-colors group cursor-pointer">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center gap-4">
+                            <img class="w-14 h-14 rounded-xl object-cover border border-white/10" data-alt="Professional studio headshot of a middle-aged man with a determined fitness coach persona. The aesthetic uses deep blue backgrounds with sharp, bright green accent lighting that emphasizes textures. The visual is polished, premium, and fits a high-performance gym management dashboard. Cinematic depth of field isolates the subject from a subtle gym-inspired background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdQIJevMXebKG4CSNyD11WxdI9hmL6-ul_5614d2Y5nD8k5xejRtGep5ARP0O-Gy1L9X0C1jnedRSQAn4mMlenbn6_4Wp1OMWKkce4gDR48TUDjJq0FovYMt2QljNXbBI2wgFPq-6JyRnqaB5TBCf8H1YSvs3B_obb8CUSW7EskSPKDjjAG4TutS0I2FtdRkD7ij2zdvnOvwuPd2z9d1ggqXAxyqFWxqvuCo7wapmA9aFeDTOuYRN7"/>
+                            <div>
+                                <h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-tertiary transition-colors">David Chen</h3>
+                                <p class="text-label-sm text-on-surface-variant uppercase tracking-tighter">ID: AF-21055</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-tertiary/10 text-tertiary text-[10px] font-bold uppercase border border-tertiary/20">Suspended</span>
+                    </div>
+                    <div class="space-y-2 border-t border-white/5 pt-4">
+                        <div class="flex items-center gap-2 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[18px]">phone</span>
+                            <span class="text-body-sm font-body-sm">+1 (555) 444-2211</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[18px]">mail</span>
+                            <span class="text-body-sm font-body-sm">dchen.fitness@global.net</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- More cards for visual density -->
+                <div class="glass-card p-6 rounded-xl hover:border-primary/50 transition-colors group cursor-pointer">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center gap-4">
+                            <img class="w-14 h-14 rounded-xl object-cover border border-white/10" data-alt="Vibrant and high-energy portrait of a female athlete in a modern gym. The scene is illuminated by neon green and soft white lights against a dark, moody background. The composition is balanced and professional, embodying the high-performance culture of a premium gym. Rich colors and clean lines align with a modern SaaS aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNuEL9ytUicdctDu8ikJSUBHF5s5NVXSwElr42nzpH1STrD76uy198ALUOVG6YvZePQ5m47KcqyHNafWhLdQBc60mXnw6u-h05PlvLVSrHoCkyC67TE6ab-YAYs9nByK8Hir5zeFh_oDwwZ75nonO_4QxJAAYsaGh_-HNdpOvrU34tTb2v9xm-bbTiMtS_kRTrsvBbWmH2UrxtnURKGO1sNGf7kDgZINusH8H95qbQ66GKbMVVM7uc"/>
+                            <div>
+                                <h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">Sarah Jenkins</h3>
+                                <p class="text-label-sm text-on-surface-variant uppercase tracking-tighter">ID: AF-21100</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase border border-primary/20">Active</span>
+                    </div>
+                    <div class="space-y-2 border-t border-white/5 pt-4">
+                        <div class="flex items-center gap-2 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[18px]">phone</span>
+                            <span class="text-body-sm font-body-sm">+1 (555) 777-8899</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[18px]">mail</span>
+                            <span class="text-body-sm font-body-sm">sarah.j@apex.com</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-xl hover:border-primary/50 transition-colors group cursor-pointer">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center gap-4">
+                            <img class="w-14 h-14 rounded-xl object-cover border border-white/10" data-alt="Low-angle heroic shot of a male fitness member standing in a high-tech gym lobby. The lighting is cinematic with green neon strips reflecting on polished black floors. The subject wears premium workout gear. The image conveys strength, focus, and a sense of belonging to an elite fitness club. High resolution and sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb1jr3qEmvwUj3kauwzcRnRI3VFuaGvzQbwFsk-I8GZC8P16aMjG-qV46MzOUReLypfqtgv-sFAz_aPc8HbBJP6Yg1omJKY8KWDQsnTtsRDq3wPGvm_QNs-J1RfqAPHablNosN8F0xZ7qxJ3Qu6mMO3-Sx3Z9w7PmiXgPSIkV9NAmT_FdrdT_njFVA-Gni7RBhSz87-vfgF9N3zyXVqI9147ZHgEmZcJfG4-10nL024YplGHkd5ctU"/>
+                            <div>
+                                <h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">James Wilson</h3>
+                                <p class="text-label-sm text-on-surface-variant uppercase tracking-tighter">ID: AF-19504</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase border border-primary/20">Active</span>
+                    </div>
+                    <div class="space-y-2 border-t border-white/5 pt-4">
+                        <div class="flex items-center gap-2 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[18px]">phone</span>
+                            <span class="text-body-sm font-body-sm">+1 (555) 222-3344</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[18px]">mail</span>
+                            <span class="text-body-sm font-body-sm">j.wilson@mail.com</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-xl hover:border-error/50 transition-colors group cursor-pointer">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center gap-4">
+                            <img class="w-14 h-14 rounded-xl object-cover border border-white/10" data-alt="Artistic portrait of a gym member, utilizing a minimalist and high-contrast photographic style. The color palette centers on deep charcoal, black, and electric green accents. Lighting is directional and dramatic, creating a premium aesthetic. The background is a sleek, dark gym environment with subtle glass reflections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdIZkpMBiF07h7pApyOL-ZNs-NTZWRupMIZr1lvsqGX7OFXAL7NnzHQCeKdS5PjbjHaPAZflJBbnP9W-NuawNNGJGi4lOlBnVoLg1migQcuLaz4cfHoS_qaCeq0MiNWl2LpOB9v5hSuimRCH9bFEWe6_3J6VBvCvbW3eWFSyuAg6rQpRYdeRSoORXIYFPavOJQ80F3XLM-yKE4_wr6EQpKlXlreumechAn_bLI5lwbZqWPYG4umH22"/>
+                            <div>
+                                <h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-error transition-colors">Olivia White</h3>
+                                <p class="text-label-sm text-on-surface-variant uppercase tracking-tighter">ID: AF-20443</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-error/10 text-error text-[10px] font-bold uppercase border border-error/20">Expired</span>
+                    </div>
+                    <div class="space-y-2 border-t border-white/5 pt-4">
+                        <div class="flex items-center gap-2 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[18px]">phone</span>
+                            <span class="text-body-sm font-body-sm">+1 (555) 888-0099</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[18px]">mail</span>
+                            <span class="text-body-sm font-body-sm">olivia.w@studio.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Floating Action Button -->
+        <button class="fixed bottom-24 right-8 w-16 h-16 rounded-full bg-primary shadow-[0_8px_32px_rgba(75,226,119,0.3)] flex items-center justify-center text-black active:scale-90 transition-transform z-50 group">
+            <span class="material-symbols-outlined text-[32px] font-bold">person_add</span>
+            <span class="absolute right-full mr-4 bg-surface-container px-4 py-2 rounded-lg border border-white/10 text-label-md font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Add Member</span>
+        </button>
+        <!-- Bottom Navigation Bar (Mobile Only) -->
+        <nav class="lg:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-4 bg-surface-container-low/95 backdrop-blur-md border-t border-white/10 shadow-[0_-4px_24px_rgba(0,0,0,0.4)] rounded-t-xl">
+            <a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform active:bg-white/10 p-2" href="#">
+                <span class="material-symbols-outlined">home</span>
+                <span class="font-label-sm text-label-sm mt-1">Home</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-primary font-bold active:scale-90 transition-transform active:bg-white/10 p-2" href="#">
+                <span class="material-symbols-outlined">group</span>
+                <span class="font-label-sm text-label-sm mt-1">Members</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform active:bg-white/10 p-2" href="#">
+                <span class="material-symbols-outlined">qr_code_2</span>
+                <span class="font-label-sm text-label-sm mt-1">Check-in</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform active:bg-white/10 p-2" href="#">
+                <span class="material-symbols-outlined">payments</span>
+                <span class="font-label-sm text-label-sm mt-1">Revenue</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform active:bg-white/10 p-2" href="#">
+                <span class="material-symbols-outlined">settings</span>
+                <span class="font-label-sm text-label-sm mt-1">Settings</span>
+            </a>
+        </nav>
+    </main>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Ripple effect or simple interactions could be added here
+        const filterButtons = document.querySelectorAll('.filter-chip');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => b.classList.remove('bg-primary', 'text-black'));
+                filterButtons.forEach(b => b.classList.add('bg-white/5', 'text-on-surface-variant'));
+                btn.classList.add('bg-primary', 'text-black');
+                btn.classList.remove('bg-white/5', 'text-on-surface-variant');
+            });
+        });
+    });
+</script>
+</body></html>
